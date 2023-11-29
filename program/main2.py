@@ -1,6 +1,6 @@
 from func_connections import connect_dydx
 from constants import ABORT_ALL_POSITIONS, FIND_COINTEGRATED, MANAGE_EXITS, PLACE_TRADES
-from func_private import abort_all_positions
+from func_private import abort_all_positions, get_account_response
 from func_public import construct_market_prices
 from func_cointegration import store_cointegration_results
 from func_entry_pairs import open_positions

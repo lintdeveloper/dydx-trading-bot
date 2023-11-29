@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+from decimal import Decimal, ROUND_HALF_UP
+
 
 # Format number
 def format_number(curr_num, match_num):
@@ -17,6 +19,19 @@ def format_number(curr_num, match_num):
     return float(curr_num_string)
   else:
     return f'{int(curr_num)}'
+  
+def convert_to_quantum_size(number, quantum_size):
+  return round(number / quantum_size) * quantum_size
+
+def convert_to_step_size(order_size, step_size):
+  try:
+      order_size = Decimal(str(order_size))
+      step_size = Decimal(str(step_size))
+      rounded_size = (order_size / step_size).quantize(Decimal('1'), rounding=ROUND_HALF_UP) * step_size
+      return float(rounded_size)
+  except ValueError:
+      return "Invalid input. Please provide numeric values for order size and step size."
+
 
 #Format time
 def format_time(timestamp):

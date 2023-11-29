@@ -5,39 +5,71 @@ import json
 
 from pprint import pprint
 
-# Place market order
-def place_market_order(client, market, side, size, price, reduce_only):
-  # Get Position Id
-  account_response = client.private.get_account()
-  position_id = account_response.data['account']['positionId']
+# Get existing open positions
+def is_open_positions(client, market):
 
-  # Get expiration time
-  server_time = client.public.get_time()
-  # This is replaced
-  expiration = datetime.fromisoformat(server_time.data['iso'].replace('Z', '')) + timedelta(seconds=70)
+  # Protect API
+  time.sleep(0.2)
 
-  print("Size: ", size)
-  
-  # xpiration.timestamp()
-
-  # Place an order
-  placed_order = client.private.create_order(
-    position_id=position_id,
+  # Get positions
+  all_positions = client.private.get_positions(
     market=market,
-    side=side,
-    order_type="MARKET",
-    post_only=False,
-    size=size,
-    price=price,
-    limit_fee='0.015',
-    expiration_epoch_seconds= time.time() + 86400,
-    time_in_force="FOK",
-    reduce_only=reduce_only
+    status="OPEN"
   )
 
-  # Return result
-  return placed_order.data
+  # Determine if open
+  if len(all_positions.data["positions"]) > 0:
+    return True
+  else:
+    return False
+  
+# Check order status
+def check_order_status(client, order_id):
+  order = client.private.get_order_by_id(order_id)
+  if order.data:
+    if "order" in order.data.keys():
+      return order.data["order"]["status"]
+  return "FAILED"
 
+def get_account_response(client):
+  account_response = client.private.get_account().data['account']['openPositions']
+  return account_response
+  
+# Place market order
+def place_market_order(client, market, side, size, price, reduce_only):
+  try:
+    # Get Position Id
+    account_response = client.private.get_account()
+    position_id = account_response.data["account"]["positionId"]
+
+    # Get expiration time
+    server_time = client.public.get_time()
+    expiration = datetime.fromisoformat(server_time.data["iso"].replace("Z", '+00:00')) + timedelta(seconds=120)
+
+    # Place an order
+    placed_order = client.private.create_order(
+      position_id=position_id, # required for creating the order signature
+      market=market,
+      side=side,
+      order_type="MARKET",
+      post_only=False,
+      size=size,
+      price=price,
+      limit_fee='0.015',
+      expiration_epoch_seconds=expiration.timestamp(),
+      time_in_force="FOK", 
+      reduce_only=reduce_only
+    )
+
+    print(placed_order.data)
+    # Return result
+    return placed_order.data
+  
+  except Exception as e:
+    print("Error occurred:", e)
+    # traceback.print_exc()
+
+    
 # Abort all open position
 def abort_all_positions(client):
   # Cancel all orders
