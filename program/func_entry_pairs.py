@@ -116,6 +116,8 @@ def open_positions(client):
 
             base_size = convert_to_step_size(base_size, base_step_size)
             quote_size = convert_to_step_size(quote_size, quote_step_size)
+            accept_base_price = convert_to_step_size(accept_base_price, base_tick_size)
+            accept_quote_price = convert_to_step_size(accept_quote_price, quote_tick_size)
 
             bot_agent = BotAgent(
               client,
