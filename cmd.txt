@@ -1,0 +1,4 @@
+if changes have been made"
+ git reset --hard HEAD
+
+ git pull origin --rebase 
