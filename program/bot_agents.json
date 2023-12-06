@@ -1,1 +1,1 @@
-[]
+[{"market_1": "UMA-USD", "market_2": "SUSHI-USD", "hedge_ratio": 1.5804435460616093, "z_score": -2.36146222069316, "half_life": 12.0, "order_id_m1": "3ea372fe8e502607b4611b66a2362ac21ec92937d1b17dbc59912243d974afb", "order_m1_size": "50.5", "order_m1_side": "BUY", "order_time_m1": "2023-12-04T14:56:39.146806", "order_id_m2": "138fcd005071774be34f1aca7c78c61c72bcf4b85e2f11bf9c95a44b53d5824", "order_m2_size": "72.6", "order_m2_side": "SELL", "order_time_m2": "2023-12-04T14:56:58.744351", "pair_status": "LIVE", "comments": ""}]
